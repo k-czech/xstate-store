@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default async function Loading() {
+export const Loader = () => {
 	return (
 		<div className="flex min-h-[calc(100vh-80px)] w-full items-center justify-center">
 			<div
@@ -10,4 +10,4 @@ export default async function Loading() {
 			></div>
 		</div>
 	);
-}
+};
