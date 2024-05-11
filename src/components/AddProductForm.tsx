@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { useProducts } from "@/contexts/ProductsProvider";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
 
 const FormSchema = z.object({
 	name: z.string().max(20, {
@@ -28,7 +28,7 @@ const FormSchema = z.object({
 	requiresShipping: z.boolean().optional(),
 });
 
-export function AddProductForm() {
+export const AddProductForm = () => {
 	const { addProduct } = useProducts();
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
@@ -49,7 +49,7 @@ export function AddProductForm() {
 			),
 		});
 		addProduct({
-			id: uuid(),
+			id: uuidv4(),
 			name: data.name,
 			price: data.price,
 			requiresShipping: data.requiresShipping,
@@ -114,4 +114,4 @@ export function AddProductForm() {
 			</form>
 		</Form>
 	);
-}
+};

@@ -5,6 +5,8 @@ import { Header } from "@/components/Header";
 import { ModalProvider } from "@/contexts/ModalProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { ProductsProvider } from "@/contexts/ProductsProvider";
+import { CartProvider } from "@/contexts/CartProvider";
+import { CustomerAddressProvider } from "@/contexts/AddressProvider";
 
 const lato = Lato({ subsets: ["latin-ext"], weight: ["400", "700"] });
 
@@ -30,9 +32,13 @@ export default function RootLayout({
 			<body className={lato.className}>
 				<ModalProvider>
 					<ProductsProvider>
-						<Header />
-						<main>{children}</main>
-						<Toaster />
+						<CartProvider>
+							<CustomerAddressProvider>
+								<Header />
+								<main>{children}</main>
+								<Toaster />
+							</CustomerAddressProvider>
+						</CartProvider>
 					</ProductsProvider>
 				</ModalProvider>
 			</body>

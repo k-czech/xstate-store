@@ -1,15 +1,12 @@
 "use client";
 
-import { LOCAL_STORAGE_PORDUCTS_KEY } from "@/constants/local-storage";
-import { StateContextProps } from "@/interfaces";
+import {
+	LOCAL_STORAGE_CART_PRODUCTS_KEY,
+	LOCAL_STORAGE_PORDUCTS_KEY,
+} from "@/constants/local-storage";
+import { Product, StateContextProps } from "@/interfaces";
 import { createContext, useContext, useEffect, useReducer } from "react";
-
-type Product = {
-	id: string;
-	name: string;
-	price: string;
-	requiresShipping?: boolean;
-};
+import { initialCartState } from "./CartProvider";
 
 type ProductState = {
 	products: Product[];
@@ -75,6 +72,18 @@ export const ProductsProvider = ({ children }: StateContextProps) => {
 	useEffect(() => {
 		const savedProducts = localStorage.getItem(LOCAL_STORAGE_PORDUCTS_KEY);
 		const products = savedProducts ? JSON.parse(savedProducts) : [];
+
+		const savedCartProducts = localStorage.getItem(
+			LOCAL_STORAGE_CART_PRODUCTS_KEY,
+		);
+
+		const cartProducts = savedCartProducts ? JSON.parse(savedCartProducts) : [];
+		if (cartProducts.length === 0) {
+			localStorage.setItem(
+				LOCAL_STORAGE_CART_PRODUCTS_KEY,
+				JSON.stringify(initialCartState.cartProducts),
+			);
+		}
 		dispatch({ type: "LOAD_PRODUCTS", products });
 		dispatch({ type: "SET_LOADING", loading: false });
 	}, []);
