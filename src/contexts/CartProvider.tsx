@@ -4,7 +4,13 @@ import {
 	LOCAL_STORAGE_CART_PRODUCTS_KEY,
 } from "@/constants/local-storage";
 import { Product, StateContextProps } from "@/interfaces";
-import { createContext, useContext, useEffect, useReducer } from "react";
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useMemo,
+	useReducer,
+} from "react";
 import { v4 as uuidv4 } from "uuid";
 
 type CartProducts = {
@@ -75,6 +81,8 @@ const CartContext = createContext<{
 	addProduct: (cartId: string, product: Product) => void;
 	updateProduct: (product: Product) => void;
 	removeProduct: (product: Product) => void;
+	totalPrice: number;
+	removeCart: () => void;
 }>({
 	state: {
 		cartProducts: {
@@ -87,6 +95,8 @@ const CartContext = createContext<{
 	addProduct: () => {},
 	updateProduct: () => {},
 	removeProduct: () => {},
+	totalPrice: 0,
+	removeCart: () => {},
 });
 
 export const initialCartState: CartState = {
@@ -149,6 +159,22 @@ export const CartProvider = ({ children }: StateContextProps) => {
 		dispatch({ type: "REMOVE_PRODUCT", product });
 	};
 
+	const totalPrice = useMemo(() => {
+		return state.cartProducts.products.reduce((acc, product) => {
+			return acc + Number(product.price) * Number(product.quantity);
+		}, 0);
+	}, [state.cartProducts.products]);
+
+	const removeCart = () => {
+		localStorage.removeItem(LOCAL_STORAGE_CART_ID_KEY);
+		localStorage.removeItem(LOCAL_STORAGE_CART_PRODUCTS_KEY);
+
+		dispatch({
+			type: "LOAD_PRODUCTS",
+			cartProducts: initialCartState.cartProducts,
+		});
+	};
+
 	useEffect(() => {
 		const cartId = getOrCreateCart();
 		if (state.cartProducts.cartId === cartId) {
@@ -167,6 +193,8 @@ export const CartProvider = ({ children }: StateContextProps) => {
 				addProduct,
 				updateProduct,
 				removeProduct,
+				totalPrice,
+				removeCart,
 			}}
 		>
 			{children}

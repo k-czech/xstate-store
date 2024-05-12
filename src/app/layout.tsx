@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ProductsProvider } from "@/contexts/ProductsProvider";
 import { CartProvider } from "@/contexts/CartProvider";
 import { CustomerAddressProvider } from "@/contexts/AddressProvider";
+import { PaymentProvider } from "@/contexts/PaymentProvider";
 
 const lato = Lato({ subsets: ["latin-ext"], weight: ["400", "700"] });
 
@@ -34,9 +35,11 @@ export default function RootLayout({
 					<ProductsProvider>
 						<CartProvider>
 							<CustomerAddressProvider>
-								<Header />
-								<main>{children}</main>
-								<Toaster />
+								<PaymentProvider>
+									<Header />
+									<main>{children}</main>
+									<Toaster />
+								</PaymentProvider>
 							</CustomerAddressProvider>
 						</CartProvider>
 					</ProductsProvider>

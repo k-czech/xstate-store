@@ -10,8 +10,10 @@ import { z } from "zod";
 import { AddAddressForm, FormSchema } from "./AddAddressForm";
 import { Loader } from "./Loader";
 import { useCustommerAddress } from "@/contexts/AddressProvider";
+import { useRouter } from "next/navigation";
 
 export const CheckoutForm = () => {
+	const router = useRouter();
 	const { state } = useCart();
 	const { addAddress } = useCustommerAddress();
 	const [deliveryCountry, setDeliveryCountry] = useState<string>("");
@@ -35,6 +37,7 @@ export const CheckoutForm = () => {
 		});
 		setDeliveryCountry("");
 		form.reset();
+		router.push("/payment");
 	};
 
 	return state.loading ? (
@@ -60,7 +63,7 @@ export const CheckoutForm = () => {
 							);
 						})}
 						<Button type="submit" className="w-full max-w-xs text-white">
-							Zapisz adres
+							Przejdź do płatności
 						</Button>
 					</form>
 				</Form>

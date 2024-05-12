@@ -23,8 +23,9 @@ const FormSchema = z.object({
 		message: "Nazwa produktu może mieć maksymalnie 20 znaków",
 	}),
 	price: z
-		.string({ invalid_type_error: "Cena musi być liczbą" })
-		.min(1, { message: "Cena musi być wieksza od 0" }),
+		.string({ required_error: "Cena jest wymagana" })
+		.min(1, { message: "Cena musi być wieksza od 0" })
+		.refine((val) => !val.includes("-"), "Cena nie może być wartością ujemną"),
 	requiresShipping: z.boolean().optional(),
 });
 

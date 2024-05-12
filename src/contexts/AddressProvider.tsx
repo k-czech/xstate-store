@@ -49,6 +49,7 @@ const addressReducer = (
 const CustomerAddressContext = createContext<{
 	state: AddressState;
 	addAddress: (address: Address) => void;
+	removeAddress: () => void;
 }>({
 	state: {
 		address: {
@@ -60,6 +61,7 @@ const CustomerAddressContext = createContext<{
 		loading: true,
 	},
 	addAddress: () => {},
+	removeAddress: () => {},
 });
 
 const initialState: AddressState = {
@@ -82,16 +84,26 @@ export const CustomerAddressProvider = ({ children }: StateContextProps) => {
 	}, []);
 
 	useEffect(() => {
-		if (Object.entries(state).length > 0) {
-			localStorage.setItem(LOCAL_STORAGE_ADDRESS_KEY, JSON.stringify(state));
+		if (state.address.city !== "" || state.address.street !== "") {
+			localStorage.setItem(
+				LOCAL_STORAGE_ADDRESS_KEY,
+				JSON.stringify(state.address),
+			);
 		}
 	}, [state]);
 
 	const addAddress = (address: Address) => {
 		dispatch({ type: "ADD_ADDRESS", address });
 	};
+
+	const removeAddress = () => {
+		localStorage.removeItem(LOCAL_STORAGE_ADDRESS_KEY);
+		dispatch({ type: "ADD_ADDRESS", address: initialState.address });
+	};
 	return (
-		<CustomerAddressContext.Provider value={{ state, addAddress }}>
+		<CustomerAddressContext.Provider
+			value={{ state, addAddress, removeAddress }}
+		>
 			{children}
 		</CustomerAddressContext.Provider>
 	);

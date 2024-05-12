@@ -9,19 +9,17 @@ import NextLink from "next/link";
 import { useMemo } from "react";
 
 export const CartProducts = () => {
-	const { state: cart, removeProduct } = useCart();
-
-	const totalPrice = useMemo(() => {
-		return cart.cartProducts.products.reduce((acc, product) => {
-			return acc + Number(product.price) * Number(product.quantity);
-		}, 0);
-	}, [cart.cartProducts.products]);
+	const { state: cart, removeProduct, totalPrice } = useCart();
 
 	const isProductDeliveryRequired = useMemo(() => {
 		return cart.cartProducts.products.some(
 			(product) => product.requiresShipping,
 		);
 	}, [cart.cartProducts.products]);
+
+	const isPaymentRequired = useMemo(() => {
+		return totalPrice !== 0;
+	}, [totalPrice]);
 
 	return cart.loading ? (
 		<Loader />
@@ -37,7 +35,7 @@ export const CartProducts = () => {
 							<thead>
 								<tr>
 									<th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-700">
-										Product
+										Produkt
 									</th>
 									<th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-700">
 										Ilość
@@ -46,7 +44,7 @@ export const CartProducts = () => {
 										Cena
 									</th>
 									<th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-700">
-										Wysylka
+										Wysyłka
 									</th>
 									<th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3"></th>
 								</tr>
@@ -119,12 +117,20 @@ export const CartProducts = () => {
 						<p className="text-xl font-semibold">{formatMoney(totalPrice)}</p>
 					</div>
 					<NextLink
-						href={isProductDeliveryRequired ? "/checkout" : "/payment"}
+						href={
+							isProductDeliveryRequired
+								? "/checkout"
+								: isPaymentRequired
+									? "/payment"
+									: "/summary"
+						}
 						className="inline-flex w-full max-w-xs items-center justify-center self-end whitespace-nowrap rounded-md bg-primary py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
 					>
 						{isProductDeliveryRequired
 							? "Przejdz do dostawy"
-							: "Przejdz do płatnosci"}
+							: isPaymentRequired
+								? "Przejdz do płatności"
+								: "Przejdź do podsumowania"}
 					</NextLink>
 				</div>
 			)}
