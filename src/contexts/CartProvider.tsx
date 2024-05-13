@@ -160,7 +160,7 @@ export const CartProvider = ({ children }: StateContextProps) => {
 	};
 
 	const totalPrice = useMemo(() => {
-		return state.cartProducts.products.reduce((acc, product) => {
+		return state.cartProducts?.products?.reduce((acc, product) => {
 			return acc + Number(product.price) * Number(product.quantity);
 		}, 0);
 	}, [state.cartProducts.products]);
