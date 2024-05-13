@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import { Header } from "@/components/Header";
+import { ModalProvider } from "@/contexts/ModalProvider";
+import { Toaster } from "@/components/ui/toaster";
+import { ProductsProvider } from "@/contexts/ProductsProvider";
+import { CartProvider } from "@/contexts/CartProvider";
+import { CustomerAddressProvider } from "@/contexts/AddressProvider";
+import { PaymentProvider } from "@/contexts/PaymentProvider";
 
-const lato = Lato({ subsets: ["latin-ext"], weight: ["400", "700"] });
+const open_sans = Open_Sans({ subsets: ["latin-ext"], weight: ["400", "700"] });
 
 export const metadata: Metadata = {
 	title: "CorazLepszaFirma.pl - system zakupowy",
@@ -22,8 +29,22 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
-			<body className={lato.className}>{children}</body>
+		<html lang="pl-PL">
+			<body className={open_sans.className}>
+				<ModalProvider>
+					<ProductsProvider>
+						<CartProvider>
+							<CustomerAddressProvider>
+								<PaymentProvider>
+									<Header />
+									<main>{children}</main>
+									<Toaster />
+								</PaymentProvider>
+							</CustomerAddressProvider>
+						</CartProvider>
+					</ProductsProvider>
+				</ModalProvider>
+			</body>
 		</html>
 	);
 }
