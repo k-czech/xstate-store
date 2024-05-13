@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { ModalProvider } from "@/contexts/ModalProvider";
@@ -9,7 +9,7 @@ import { CartProvider } from "@/contexts/CartProvider";
 import { CustomerAddressProvider } from "@/contexts/AddressProvider";
 import { PaymentProvider } from "@/contexts/PaymentProvider";
 
-const lato = Lato({ subsets: ["latin-ext"], weight: ["400", "700"] });
+const open_sans = Open_Sans({ subsets: ["latin-ext"], weight: ["400", "700"] });
 
 export const metadata: Metadata = {
 	title: "CorazLepszaFirma.pl - system zakupowy",
@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="pl-PL">
-			<body className={lato.className}>
+			<body className={open_sans.className}>
 				<ModalProvider>
 					<ProductsProvider>
 						<CartProvider>

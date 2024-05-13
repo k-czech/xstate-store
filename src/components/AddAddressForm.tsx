@@ -100,6 +100,7 @@ export const AddAddressForm = ({
 								onValueChange={(value) => {
 									field.onChange(value);
 									setDeliveryCountry(value);
+									form.resetField("deliveryMethod");
 								}}
 							>
 								<SelectTrigger className="w-[180px]">
