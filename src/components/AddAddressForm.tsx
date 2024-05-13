@@ -19,7 +19,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { useCustommerAddress } from "@/contexts/AddressProvider";
 
 export const FormSchema = z.object({
 	street: z
@@ -57,6 +58,17 @@ export const AddAddressForm = ({
 	deliveryCountry,
 	setDeliveryCountry,
 }: AddAddressFormProps) => {
+	const { state: custommerAddress } = useCustommerAddress();
+
+	useEffect(() => {
+		if (custommerAddress.address.city !== "") {
+			form.setValue("city", custommerAddress.address.city);
+			form.setValue("street", custommerAddress.address.street);
+			form.setValue("country", custommerAddress.address.country);
+			setDeliveryCountry(custommerAddress.address.country);
+			form.setValue("deliveryMethod", custommerAddress.address.deliveryMethod);
+		}
+	}, [form, custommerAddress]);
 	return requiresShipping ? (
 		<>
 			<FormField
@@ -96,7 +108,7 @@ export const AddAddressForm = ({
 					<FormItem className="flex flex-row items-center space-x-3">
 						<FormControl>
 							<Select
-								value={field.value}
+								value={field.value || custommerAddress.address.country}
 								onValueChange={(value) => {
 									field.onChange(value);
 									setDeliveryCountry(value);
@@ -125,7 +137,10 @@ export const AddAddressForm = ({
 					render={({ field: { onChange, value } }) => (
 						<FormItem className="flex flex-row items-center space-x-3">
 							<FormControl>
-								<Select value={value} onValueChange={onChange}>
+								<Select
+									value={value || custommerAddress.address.deliveryMethod}
+									onValueChange={onChange}
+								>
 									<SelectTrigger className="w-[180px]">
 										<SelectValue placeholder="Wybierz przewoźnika" />
 									</SelectTrigger>

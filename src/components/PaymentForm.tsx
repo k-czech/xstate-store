@@ -20,6 +20,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { usePayment } from "@/contexts/PaymentProvider";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const FormSchema = z.object({
 	payment_method: z
@@ -31,7 +32,7 @@ const FormSchema = z.object({
 
 export const PaymentForm = () => {
 	const router = useRouter();
-	const { setPaymentMethod } = usePayment();
+	const { setPaymentMethod, paymentMethod } = usePayment();
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
@@ -45,6 +46,13 @@ export const PaymentForm = () => {
 		form.reset();
 	};
 
+	useEffect(() => {
+		if (paymentMethod !== "") {
+			form.setValue("payment_method", paymentMethod);
+			setPaymentMethod(paymentMethod);
+		}
+	}, [form, paymentMethod]);
+
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
@@ -55,7 +63,10 @@ export const PaymentForm = () => {
 						<>
 							<FormItem>
 								<FormControl>
-									<Select value={field.value} onValueChange={field.onChange}>
+									<Select
+										value={field.value || paymentMethod}
+										onValueChange={field.onChange}
+									>
 										<SelectTrigger className="w-[180px]">
 											<SelectValue placeholder="Wybierz metode płatności" />
 										</SelectTrigger>

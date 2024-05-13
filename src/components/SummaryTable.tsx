@@ -10,6 +10,7 @@ import { useCallback, useState } from "react";
 import { executeApi } from "@/services/api-config";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
+import { BackButton } from "./BackButton";
 
 export const SummaryTable = () => {
 	const [loading, setLoading] = useState(false);
@@ -163,18 +164,23 @@ export const SummaryTable = () => {
 							</table>
 						</div>
 					</div>
-					<div className="flex flex-col gap-2">
-						<div className="flex gap-2 self-end">
-							<p className="text-xl">Razem do zapłaty:</p>
-							<p className="text-xl font-semibold">{formatMoney(totalPrice)}</p>
+					<div className="flex flex-row items-center justify-between">
+						<BackButton />
+						<div className="flex flex-col gap-2">
+							<div className="flex gap-2">
+								<p className="text-xl">Razem do zapłaty:</p>
+								<p className="text-xl font-semibold">
+									{formatMoney(totalPrice)}
+								</p>
+							</div>
+							<Button
+								type="button"
+								className="w-full max-w-xs"
+								onClick={onSubmitOrder}
+							>
+								{loading ? "Ładowanie..." : "Złóż zamówienie"}
+							</Button>
 						</div>
-						<Button
-							type="button"
-							className="w-full max-w-xs self-end"
-							onClick={onSubmitOrder}
-						>
-							{loading ? "Ładowanie..." : "Złóż zamówienie"}
-						</Button>
 					</div>
 				</div>
 			)}

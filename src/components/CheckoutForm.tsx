@@ -11,6 +11,7 @@ import { AddAddressForm, FormSchema } from "./AddAddressForm";
 import { Loader } from "./Loader";
 import { useCustommerAddress } from "@/contexts/AddressProvider";
 import { useRouter } from "next/navigation";
+import { BackButton } from "./BackButton";
 
 export const CheckoutForm = () => {
 	const router = useRouter();
@@ -67,6 +68,7 @@ export const CheckoutForm = () => {
 						</Button>
 					</form>
 				</Form>
+				<BackButton />
 			</div>
 		</div>
 	);
